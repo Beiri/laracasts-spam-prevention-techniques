@@ -37,25 +37,7 @@
                             @enderror
                         </div>
 
-                        <div style="display: none;">
-                            <div class="mb-6">
-                                <label for="my_name" class="block mb-2 uppercase font-bold text-xs text-gray-700">
-                                    My Name
-                                </label>
-
-                                <input type="text" class="border border-gray-400 p-2 w-full" name="my_name"
-                                    id="my_name">
-                            </div>
-
-                            <div class="mb-6">
-                                <label for="my_time" class="block mb-2 uppercase font-bold text-xs text-gray-700">
-                                    My Time
-                                </label>
-
-                                <input type="text" class="border border-gray-400 p-2 w-full" name="my_time"
-                                    id="my_time" value={{ microtime(true) }}>
-                            </div>
-                        </div>
+                        <x-honeypot />
 
                         <div class="mb-6">
                             <button type="submit" class="bg-blue-400 text-white rounded py-2 px-4 hover:bg-blue-500">
