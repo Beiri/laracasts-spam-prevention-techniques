@@ -1,5 +1,7 @@
 <?php
 
+use App\Honeypot\HoneypotServiceProvider;
+
 return [
 
     /*
@@ -165,6 +167,7 @@ return [
         /*
          * Package Service Providers...
          */
+        HoneypotServiceProvider::class,
 
         /*
          * Application Service Providers...
