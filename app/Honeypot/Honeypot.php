@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 class Honeypot
 {
     protected $request;
+    protected static $response;
     protected $config;
 
     public function __construct(Request $request, array $config)
@@ -39,6 +40,20 @@ class Honeypot
         }
 
         return false;
+    }
+
+    public static function abortUsing(callable $response)
+    {
+        static::$response = $response;
+    }
+
+    public function abort()
+    {
+        if (static::$response) {
+            return call_user_func(static::$response);
+        }
+
+        return abort(422, 'Spam detected');
     }
 
     protected function submittedTooQuickly()

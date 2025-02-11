@@ -17,7 +17,7 @@ class BlockSpam
     public function handle(Request $request, Closure $next)
     {
         if ($this->honeypot->detect()) {
-            return abort(422, 'Spam detected');
+            return $this->honeypot->abort();
         }
 
         return $next($request);
