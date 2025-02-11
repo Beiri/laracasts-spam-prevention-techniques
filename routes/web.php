@@ -1,6 +1,6 @@
 <?php
 
-use App\Honeypot\Honeypot;
+use App\Honeypot\BlockSpam;
 use App\Models\Post;
 use Illuminate\Support\Facades\Route;
 
@@ -28,7 +28,7 @@ Route::post('/posts', function () {
     );
 
     return 'Published';
-})->middleware(['auth', Honeypot::class]);
+})->middleware(['auth', BlockSpam::class]);
 
 Route::get('/posts/create', function () {
     return view('posts.create');

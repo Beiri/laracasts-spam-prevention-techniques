@@ -2,7 +2,7 @@
 
 namespace App\Honeypot;
 
-use App\Honeypot\View\Components\Honeypot;
+use App\Honeypot\View\Components\Honeypot as HoneypotComponent;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 
@@ -15,6 +15,13 @@ class HoneypotServiceProvider extends ServiceProvider
 
     public function boot()
     {
-        Blade::component('honeypot', Honeypot::class);
+        $this->app->singleton(Honeypot::class, function () {
+            return new Honeypot(
+                $this->app['request'],
+                $this->app['config']->get('honeypot'),
+            );
+        });
+
+        Blade::component('honeypot', HoneypotComponent::class);
     }
 }

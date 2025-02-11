@@ -2,41 +2,47 @@
 
 namespace App\Honeypot;
 
-use Closure;
 use Illuminate\Http\Request;
 
 class Honeypot
 {
-    public function handle(Request $request, Closure $next)
+    protected $request;
+    protected $config;
+
+    public function __construct(Request $request, array $config)
     {
-        $config = config('honeypot');
-
-        if (! $config['enabled']) {
-            return $next($request);
-        }
-
-        if (! $request->has($config['field_name'])) {
-            return $this->abort();
-        }
-
-        if (! empty($request->input($config['field_name']))) {
-            return $this->abort();
-        }
-
-        if ($this->timeToSubmitForm($request, $config) <= $config['minimum_time']) {
-            return $this->abort();
-        }
-
-        return $next($request);
+        $this->request = $request;
+        $this->config = $config;
     }
 
-    protected function timeToSubmitForm(Request $request, array $config)
+    public function enabled()
     {
-        return microtime(true) - $request->input($config['field_time_name']);
+        return $this->config['enabled'];
     }
 
-    protected function abort()
+    public function detect()
     {
-        return abort(422, 'Spam detected');
+        if (! $this->enabled()) {
+            return false;
+        }
+
+        if (! $this->request->has($this->config['field_name'])) {
+            return true;
+        }
+
+        if (! empty($this->request->input($this->config['field_name']))) {
+            return true;
+        }
+
+        if ($this->submittedTooQuickly() <= $this->config['minimum_time']) {
+            return true;
+        }
+
+        return false;
+    }
+
+    protected function submittedTooQuickly()
+    {
+        return microtime(true) - $this->request->input($this->config['field_time_name']);
     }
 }
